@@ -1,0 +1,32 @@
+{
+  "name": "hexo-site",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "hexo generate",
+    "clean": "hexo clean",
+    "deploy": "hexo deploy",
+    "server": "hexo server"
+  },
+  "hexo": {
+    "version": "5.2.0"
+  },
+  "dependencies": {
+    "hexo": "^5.0.0",
+    "hexo-browsersync": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^0.3.0",
+    "hexo-deployer-git": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^2.1.0",
+    "hexo-generator-archive": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^1.0.0",
+    "hexo-generator-category": "^1.0.0",
+    "hexo-generator-feed": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^3.0.0",
+    "hexo-generator-index": "^2.0.0",
+    "hexo-generator-json-content": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^4.2.3",
+    "hexo-generator-search": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^2.4.1",
+    "hexo-generator-sitemap": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^2.1.0",
+    "hexo-generator-tag": "^1.0.0",
+    "hexo-renderer-ejs": "^1.0.0",
+    "hexo-renderer-jade": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^0.5.0",
+    "hexo-renderer-marked": "^3.0.0",
+    "hexo-renderer-stylus": "^2.0.0",
+    "hexo-server": "^2.0.0"
+  }
+}
