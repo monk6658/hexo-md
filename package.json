@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "hexo": "^5.0.0",
+    "hexo-asset-image": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^1.0.0",
     "hexo-browsersync": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^0.3.0",
     "hexo-deployer-git": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^2.1.0",
     "hexo-generator-archive": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^1.0.0",
@@ -27,6 +28,7 @@
     "hexo-renderer-jade": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^0.5.0",
     "hexo-renderer-marked": "^3.0.0",
     "hexo-renderer-stylus": "^2.0.0",
-    "hexo-server": "^2.0.0"
+    "hexo-server": "^2.0.0",
+    "marked": "D:\\software\\nodejs\\blog>\"node\"  \"D:\\software\\nodejs\\node_global\\\\node_modules\\npm\\bin\\npm-cli.js\" config get save-prefix \r\n^1.2.2"
   }
 }
