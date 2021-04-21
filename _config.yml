@@ -106,8 +106,8 @@ theme: hexo-theme-3-hexo-master
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
+# https://github.com/TJ-XiaJiaHao/TJ-XiaJiaHao.github.io
 deploy:
   type: git
-  repo: https://github.com/monk6658/monk6658.github.io
-  # https://github.com/TJ-XiaJiaHao/TJ-XiaJiaHao.github.io
+  repo: https://github.com/monk6658/monk6658.github.io.git
   branch: main
