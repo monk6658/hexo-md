@@ -50,7 +50,7 @@ highlight:
   auto_detect: false
   tab_replace: ''
   wrap: true
-  hljs: false
+  hljs: true
 prismjs:
   enable: false
   preprocess: true
@@ -99,7 +99,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: hexo-theme-tree-master
+theme: hexo-theme-3-hexo-master
 # hexo-theme-3-hexo-master
 # hexo-theme-tree-master
 # hexo-theme-bubuzou-master

@@ -578,7 +578,7 @@ function bind() {
             var codeClass = $(this).attr('class') || ''
             var hasCopy = $('#theme_code_copy').val() !== 'false'
             // 添加复制功能
-            $(this).after('<div class="code-embed"><span class="code-embed-type">'+ (codeClass.indexOf('hljs') === -1 ? codeClass : codeClass.indexOf('hljs') === 0 ? '' : codeClass.replace(/[\s]?hljs/g, ''))+'</span>'+(hasCopy ? '<span class="code-embed-copy" onclick="copyCode(this)">复制代码</span>' : '')+'</div>')
+            $(this).after('<div class="code-embed"><span class="code-embed-type">'+ (codeClass.indexOf('hljs') === -1 ? codeClass : codeClass.indexOf('hljs') === 0 ? '' : codeClass.replace(/[\s]?hljs/g, ''))+'</span>'+(hasCopy ? '<span class="code-embed-copy" onclick="copyCode(this)">Copy</span>' : '')+'</div>')
             // 渲染样式
             if (codeClass.indexOf('hljs') === -1) {
                 hljs.highlightBlock(block);
@@ -745,7 +745,7 @@ function copyCode(e) {
     if (copy($(e).parent().prev().text())) {
         $(e).html('复制成功')
         setTimeout(function () {
-            $(e).html('复制代码')
+            $(e).html('Copy')
         }, 1000)
     }
 }
