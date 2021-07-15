@@ -6,6 +6,8 @@ tags: [sql,oracle,函数] #文章标签，可空，多标签请用格式，注�
 description: oracle基础的语法及函数使用
 ---
 
+# 1. oracle
+
 ## 1. oracle基础语法
 
 ### 1.decode
@@ -73,3 +75,52 @@ pivot (聚合函数(列名) [as 别名1] for 列名 in (列值 as 别名2,...));
 ```
 
 注意：如果使用[as 别名1]，字段名为 **别名1_别名2**。
+
+## 2. oracle 创建表空间及用户
+
+```sql
+
+-- 查看表空间
+select * from dba_data_files where tablespace_name = 'KQ_JK'
+
+delete from dba_data_files where tablespace_name = 'KQ_JK';
+
+-- 1. 创建临时表空间
+CREATE TEMPORARY TABLESPACE KQ_JK_TEMP
+TEMPFILE '/data/oradata/testdb/KQ_JK_TEMP02.dbf'
+SIZE 32M
+AUTOEXTEND ON
+NEXT 32M MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL;
+         
+         
+-- 2. 表空间
+CREATE TABLESPACE KQ_JK
+LOGGING
+DATAFILE '/data/oradata/testdb/KQ_JK01.dbf'
+SIZE 32M
+AUTOEXTEND ON
+NEXT 32M MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL; 
+
+-- 3. 在表空间下创建角色
+CREATE USER KQ_JK IDENTIFIED BY oracle
+ACCOUNT UNLOCK
+DEFAULT TABLESPACE KQ_JK
+TEMPORARY TABLESPACE KQ_JK_TEMP;
+-- （如果没有创建临时表空间，则不需要这句话）
+
+-- 4. 授权
+GRANT CONNECT,RESOURCE TO KQ_JK;  --表示把 connect,resource权限授予tbb用户
+GRANT DBA TO KQ_JK;  --表示把 dba权限授予给tbb用户（可选）
+
+```
+
+## 3. 索引未命中出现条件
+
+1. update语句时，varchar 类型字段，使用numer赋值
+
+错误示例: update xxx set str = 3;
+
+正确示例: update xxx set str = '3';
+
