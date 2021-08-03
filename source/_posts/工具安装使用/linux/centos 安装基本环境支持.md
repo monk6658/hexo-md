@@ -30,6 +30,7 @@ cd frp_0.13.0_linux_amd64
 ```
 
 4.修改服务器配置文件(配置样例如下)
+
 ```shell
 vim frps.ini
 ```
@@ -313,9 +314,254 @@ rabbitmq-plugins list
 
 ![image-20210607160801810](centos 安装基本环境支持/image-20210607160801810.png)
 
+# 四、安装docker
+
+## 1. 安装环境
+
+此处在Centos7进行安装，可以使用以下命令查看CentOS版本
+
+```shell
+lsb_release -a
+# 上面指令不存在，安装指令集
+yum install -y redhat-lsb
+```
+
+在 CentOS 7安装docker要求系统为64位、系统内核版本为 3.10 以上，可以使用以下命令查看
+
+```shell
+uname -r
+```
+
+查看是安装过docker
+
+```shell
+yum list installed | grep docker
+```
+
+## 2. 离线安装
+
+1. 现在安装包
+
+   ```shell
+   wget https://download.docker.com/linux/static/stable/x86_64/docker-18.06.3-ce.tgz
+   ```
+
+2. 解压
+
+   ```shell
+   tar -zxvf docker-18.06.3-ce.tgz
+   ```
+
+3. 将解压出来的docker文件复制到 /usr/bin/ 目录下
+
+   ```shell
+   cp docker/* /usr/bin/
+   ```
+
+4. 创建系统服务(文件内容如下)
+
+   ```shell
+   touch docker.service
+   ```
+
+   >```shell
+   >[Unit]
+   >Description=Docker Application Container Engine
+   >Documentation=https://docs.docker.com
+   >After=network-online.target firewalld.service
+   >Wants=network-online.target
+   >
+   >[Service]
+   >Type=notify
+   ># the default is not to use systemd for cgroups because the delegate issues still
+   ># exists and systemd currently does not support the cgroup feature set required
+   ># for containers run by docker
+   >ExecStart=/usr/bin/dockerd --selinux-enabled=false --insecure-registry=127.0.0.1
+   >ExecReload=/bin/kill -s HUP $MAINPID
+   ># Having non-zero Limit*s causes performance problems due to accounting overhead
+   ># in the kernel. We recommend using cgroups to do container-local accounting.
+   >LimitNOFILE=infinity
+   >LimitNPROC=infinity
+   >LimitCORE=infinity
+   ># Uncomment TasksMax if your systemd version supports it.
+   ># Only systemd 226 and above support this version.
+   >#TasksMax=infinity
+   >TimeoutStartSec=0
+   ># set delegate yes so that systemd does not reset the cgroups of docker containers
+   >Delegate=yes
+   ># kill only the docker process, not all processes in the cgroup
+   >KillMode=process
+   ># restart the docker process if it exits prematurely
+   >Restart=on-failure
+   >StartLimitBurst=3
+   >StartLimitInterval=60s
+   >
+   >[Install]
+   >WantedBy=multi-user.target
+   >
+   >```
+
+   此处的--insecure-registry=127.0.0.1（此处改成你私服ip）设置是针对有搭建了自己私服Harbor时允许docker进行不安全的访问，否则访问将会被拒绝。
+
+5. 移动docker服务，并给服务授权，重新加载配置文件（每次有修改docker.service文件时都要重新加载下） 
+
+   ```shell
+   # 移动docker服务
+   cp docker.service /etc/systemd/system/
+   # 给docker 服务授权
+   chmod +x /etc/systemd/system/docker.service 
+   # 重新加载docker服务配置文件
+   systemctl daemon-reload 
+   ```
+
+6. 服务启动
+
+   ```shell
+   # 启动
+   systemctl start docker
+   # 设置开机启动
+   systemctl enable docker.service
+   # 查看docker状态
+   systemctl status docker
+   ```
+
+   ![image-20210720110452177](centos 安装基本环境支持/image-20210720110452177.png)
+
+## 3. 离线安装一键指令
+
+1. 创建系统服务(文件内容如下)
+
+   ```shell
+   touch docker.service
+   ```
+
+   >```shell
+   >[Unit]
+   >Description=Docker Application Container Engine
+   >Documentation=https://docs.docker.com
+   >After=network-online.target firewalld.service
+   >Wants=network-online.target
+   >
+   >[Service]
+   >Type=notify
+   ># the default is not to use systemd for cgroups because the delegate issues still
+   ># exists and systemd currently does not support the cgroup feature set required
+   ># for containers run by docker
+   >ExecStart=/usr/bin/dockerd --selinux-enabled=false --insecure-registry=127.0.0.1
+   >ExecReload=/bin/kill -s HUP $MAINPID
+   ># Having non-zero Limit*s causes performance problems due to accounting overhead
+   ># in the kernel. We recommend using cgroups to do container-local accounting.
+   >LimitNOFILE=infinity
+   >LimitNPROC=infinity
+   >LimitCORE=infinity
+   ># Uncomment TasksMax if your systemd version supports it.
+   ># Only systemd 226 and above support this version.
+   >#TasksMax=infinity
+   >TimeoutStartSec=0
+   ># set delegate yes so that systemd does not reset the cgroups of docker containers
+   >Delegate=yes
+   ># kill only the docker process, not all processes in the cgroup
+   >KillMode=process
+   ># restart the docker process if it exits prematurely
+   >Restart=on-failure
+   >StartLimitBurst=3
+   >StartLimitInterval=60s
+   >
+   >[Install]
+   >WantedBy=multi-user.target
+   >
+   >```
+
+   此处的--insecure-registry=127.0.0.1（此处改成你私服ip）设置是针对有搭建了自己私服Harbor时允许docker进行不安全的访问，否则访问将会被拒绝。
+
+2. 创建安装脚本
+
+   ```shell
+   touch install.sh
+   ```
+
+   >```shell
+   >#!/bin/sh
+   >echo '下载压缩包...'
+   >wget $1
+   >echo '解压tar包...'
+   >tar -xvf $2
+   >echo '将docker目录移到/usr/bin目录下...'
+   >cp docker/* /usr/bin/
+   >echo '将docker.service 移到/etc/systemd/system/ 目录...'
+   >cp docker.service /etc/systemd/system/
+   >echo '添加文件权限...'
+   >chmod +x /etc/systemd/system/docker.service
+   >echo '重新加载配置文件...'
+   >systemctl daemon-reload
+   >echo '启动docker...'
+   >systemctl start docker
+   >echo '设置开机自启...'
+   >systemctl enable docker.service
+   >echo 'docker安装成功...'
+   >docker -v
+   >```
+
+3. 创建卸载脚本
+
+   ```shell
+   touch uninstall.sh
+   ```
+
+   >```shell
+   >#!/bin/sh
+   >echo '关停docker 服务'
+   >systemctl stop docker
+   >echo '删除docker.service...'
+   >rm -f /etc/systemd/system/docker.service
+   >echo '删除docker文件...'
+   >rm -rf /usr/bin/docker*
+   >echo '重新加载配置文件'
+   >systemctl daemon-reload
+   >echo '卸载成功...'
+   >```
+
+4. 启动脚本
+
+   ```shell
+   # 启动安装脚本
+   sh install.sh https://download.docker.com/linux/static/stable/x86_64/docker-18.06.3-ce.tgz docker-18.06.3-ce.tgz
+   
+   # 卸载脚本
+   sh uninstall.sh
+   ```
+
+## 4. 配置镜像加速
+
+1. 配置镜像加速器,默认是到国外拉取镜像速度慢,可以配置国内的镜像如：阿里、网易等等。下面配置一下网易的镜像加速器。打开docker的配置文件: **/etc/docker/daemon.json**文件：
+
+   ```shell
+   # 修改配置文件 重新启动服务
+   sudo mkdir -p /etc/docker
+   sudo tee /etc/docker/daemon.json <<-'EOF'
+   {
+   "registry-mirrors": ["http://hub-mirror.c.163.com","https://3fonio2t.mirror.aliyuncs.com"]
+   }
+   EOF
+sudo systemctl daemon-reload
+   sudo systemctl restart docker
+   ```
+   
+   >```shell
+   ># 修改配置文件
+   >vi /etc/docker/daemon.json
+   ># 镜像内容
+   >{"registry-mirrors": ["http://hub-mirror.c.163.com","https://3fonio2t.mirror.aliyuncs.com"]}
+   >```
+
+
+
+
+
 # 参考链接
 
 [1. yum 安装卸载方式](https://www.cnblogs.com/qinghuaL/p/11597695.html)
 [2. CentOS7安装RabbitMQ](https://www.cnblogs.com/fengyumeng/p/11133924.html)
 [3.rabbitmq之后台管理和用户设置(三)](https://www.cnblogs.com/cwp-bg/p/10070467.html)
-
+[4. centos7-linux安装docker(离线方式)](https://www.cnblogs.com/helf/p/12889955.html)
+[5. Linux 离线安装docker的过程（一键式安装）](https://www.jb51.net/article/167103.htm)
